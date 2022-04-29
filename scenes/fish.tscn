@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://art/fish/trout1.png" type="Texture" id=1]
+[ext_resource path="res://art/fish/trout2.png" type="Texture" id=2]
+[ext_resource path="res://scenes/fish.gd" type="Script" id=3]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "trout",
+"speed": 2.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+height = 58.0
+
+[sub_resource type="CircleShape2D" id=3]
+
+[node name="fish" type="KinematicBody2D"]
+scale = Vector2( 0.75, 0.75 )
+collision_layer = 2
+collision_mask = 16
+script = ExtResource( 3 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "trout"
+frame = 1
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 6, 1 )
+rotation = 1.5708
+shape = SubResource( 2 )
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="mouth" type="StaticBody2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="mouth"]
+position = Vector2( -37, 0 )
+shape = SubResource( 3 )
+
+[node name="PinJoint2D" type="PinJoint2D" parent="mouth"]
+position = Vector2( -28, 0 )
+node_a = NodePath("../..")
+node_b = NodePath("..")
+
+[connection signal="tree_exited" from="." to="." method="_on_fish_tree_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
